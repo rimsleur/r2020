@@ -1,0 +1,4 @@
+interface GetValue
+{
+    String getValue();
+}

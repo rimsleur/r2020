@@ -1,0 +1,1 @@
+enum BitState {L, H, Z, U};

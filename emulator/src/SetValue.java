@@ -1,4 +1,4 @@
 interface SetValue
 {
-    public void setValue(String binaryCode);
+    public void setValue (String binaryCode);
 }

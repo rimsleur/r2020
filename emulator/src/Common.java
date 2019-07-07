@@ -1,5 +1,7 @@
-public class Common {
-    public static BitState invertPinState(BitState state) {
+public class Common
+{
+    public static BitState invertPinState(BitState state)
+    {
         if (state == BitState.L) return BitState.H;
         else if (state == BitState.H) return BitState.L;
         return BitState.Z;
@@ -43,82 +45,93 @@ public class Common {
     }
 
     //изменяет регистр IS
-    public static void setUIis(I00StateExternal external, Integer numUI, String binaryCode) {
-        if (numUI == 0) external.i00StateExternalUI0.is.setValue(binaryCode);
-        else external.i00StateExternalUI1.is.setValue(binaryCode);
+    public static void setUIis(CPUStateExternal external, Integer numUI, String binaryCode)
+    {
+        if (numUI == 0) external.cpuStateExternalUI0.da.setValue(binaryCode);
+        else external.cpuStateExternalUI1.da.setValue(binaryCode);
     }
 
     //изменяет регистр IOD
-    public static void setUIiod(I00StateExternal external, Integer numUI, String binaryCode) {
-        if (numUI == 0) external.i00StateExternalUI0.iod.setValue(binaryCode);
-        else external.i00StateExternalUI1.iod.setValue(binaryCode);
+    public static void setUIiod(CPUStateExternal external, Integer numUI, String binaryCode)
+    {
+        if (numUI == 0) external.cpuStateExternalUI0.iod.setValue(binaryCode);
+        else external.cpuStateExternalUI1.iod.setValue(binaryCode);
     }
 
 
     //изменяет флаг DIR, EREQ, STB
-    public static void setUIFlagExternal(I00StateExternal external, Integer numUI, String nameFlag, BitState bitState) {
-        switch (nameFlag) {
+    public static void setUIFlagExternal(CPUStateExternal external, Integer numUI, String nameFlag, BitState bitState)
+    {
+        switch (nameFlag)
+        {
             case "DIR":
-                if (numUI == 0) external.i00StateExternalUI0.dir = bitState;
-                else external.i00StateExternalUI1.dir = bitState;
+                if (numUI == 0) external.cpuStateExternalUI0.dir = bitState;
+                else external.cpuStateExternalUI1.dir = bitState;
                 break;
 
             case "EREQ":
-                if (numUI == 0) external.i00StateExternalUI0.ereq = bitState;
-                else external.i00StateExternalUI1.ereq = bitState;
+                if (numUI == 0) external.cpuStateExternalUI0.ereq = bitState;
+                else external.cpuStateExternalUI1.ereq = bitState;
                 break;
 
             case "STB":
-                if (numUI == 0) external.i00StateExternalUI0.stb = bitState;
-                else external.i00StateExternalUI1.stb = bitState;
+                if (numUI == 0) external.cpuStateExternalUI0.stb = bitState;
+                else external.cpuStateExternalUI1.stb = bitState;
                 break;
         }
     }
 
-    public static void setUIFlagBus(Integer numUI, String nameFlag, BitState bitState) {
-        switch (nameFlag) {
+    public static void setUIFlagBus(Integer numUI, String nameFlag, BitState bitState)
+    {
+        switch (nameFlag)
+        {
             case "DIR":
-                if (numUI == 0) I00StateUIBus0.getInstance().setDir(bitState);
-                else I00StateUIBus1.getInstance().setDir(bitState);
+                if (numUI == 0) UB0State.getInstance().setDir(bitState);
+                else UB1State.getInstance().setDir(bitState);
                 break;
 
             case "EREQ":
-                if (numUI == 0) I00StateUIBus0.getInstance().setEreq(bitState);
-                else I00StateUIBus1.getInstance().setEreq(bitState);
+                if (numUI == 0) UB0State.getInstance().setEreq(bitState);
+                else UB1State.getInstance().setEreq(bitState);
                 break;
 
             case "STB":
-                if (numUI == 0) I00StateUIBus0.getInstance().setStb(bitState);
-                else I00StateUIBus1.getInstance().setStb(bitState);
+                if (numUI == 0) UB0State.getInstance().setStb(bitState);
+                else UB1State.getInstance().setStb(bitState);
                 break;
         }
     }
 
     //изменяет регистр ISB (UIBus)
-    public static void setISB(Integer numUI, String binaryCode) {
-        if (numUI == 0) I00StateUIBus0.getInstance().setIsb(binaryCode);
-        else I00StateUIBus1.getInstance().setIsb(binaryCode);
+    public static void setISB(Integer numUI, String binaryCode)
+    {
+        if (numUI == 0) UB0State.getInstance().setDa(binaryCode);
+        else UB1State.getInstance().setDa(binaryCode);
     }
 
     //изменяет регистр DB (UIBus)
     public static void setDB(Integer numUI, String binaryCode)
     {
-        if (numUI == 0) I00StateUIBus0.getInstance().setDb(binaryCode);
-        else I00StateUIBus1.getInstance().setDb(binaryCode);
+        if (numUI == 0) UB0State.getInstance().setIod(binaryCode);
+        else UB1State.getInstance().setIod(binaryCode);
     }
 
     //изменяет регистр AO
-    public static void setA0(I1FStateA0 a0, String binaryCode) {
-        a0.setValue(binaryCode);
+    public static void setIOD (LEDIStateIOD iod, String binaryCode)
+    {
+        iod.setValue (binaryCode);
     }
 
-    public static void setA0(I20StateA0 a0, String binaryCode) {
-        a0.setValue(binaryCode);
+    public static void setIOD (RAMStateIOD iod, String binaryCode)
+    {
+        iod.setValue (binaryCode);
     }
 
     //устанавливает значение для заданого регистра
-    public static void setRegisterValue(I00StateInternal internal, String nameRegister, String binaryCode) {
-        switch (nameRegister) {
+    public static void setRegisterValue(CPUStateInternal internal, String nameRegister, String binaryCode)
+    {
+        switch (nameRegister)
+        {
             case "CMDR":
                 internal.cmdr.setValue(binaryCode);
                 break;
@@ -141,8 +154,10 @@ public class Common {
     }
 
     //очистка регистра internal
-    public static void clearRegister(I00StateInternal internal, String nameRegister) {
-        switch (nameRegister) {
+    public static void clearRegister(CPUStateInternal internal, String nameRegister)
+    {
+        switch (nameRegister)
+        {
             case "ARG1R":
                 internal.arg1r.setValue(zeroBinary);
                 break;
@@ -159,15 +174,17 @@ public class Common {
     }
 
     //очистка регистра external
-    public static void clearRegister(I00StateExternal external, Integer numUI, String nameRegister) {
-        switch (nameRegister) {
+    public static void clearRegister(CPUStateExternal external, Integer numUI, String nameRegister)
+    {
+        switch (nameRegister)
+        {
             case "IS":
-                if (numUI == 0) external.i00StateExternalUI0.is.setValue(zeroBinary);
-                else external.i00StateExternalUI1.is.setValue(zeroBinary);
+                if (numUI == 0) external.cpuStateExternalUI0.da.setValue(zeroBinary);
+                else external.cpuStateExternalUI1.da.setValue(zeroBinary);
                 break;
             case "IOD":
-                if (numUI == 0) external.i00StateExternalUI0.iod.setValue(zeroBinary);
-                else external.i00StateExternalUI1.iod.setValue(zeroBinary);
+                if (numUI == 0) external.cpuStateExternalUI0.iod.setValue(zeroBinary);
+                else external.cpuStateExternalUI1.iod.setValue(zeroBinary);
                 break;
         }
     }
@@ -178,12 +195,12 @@ public class Common {
 
         switch (nameRegister) {
             case "ISB":
-                if (numUI == 0) result = I00StateUIBus0.getInstance().getIsb();
-                else result = I00StateUIBus1.getInstance().getIsb();
+                if (numUI == 0) result = UB0State.getInstance().getDa();
+                else result = UB1State.getInstance().getDa();
                 break;
             case "DB":
-                if (numUI == 0) result = I00StateUIBus0.getInstance().getDb();
-                else result = I00StateUIBus1.getInstance().getDb();
+                if (numUI == 0) result = UB0State.getInstance().getIod();
+                else result = UB1State.getInstance().getIod();
                 break;
         }
 
@@ -191,7 +208,7 @@ public class Common {
     }
 
     //возвращает значения регистров в 2-м коде
-    public static String getRegisterValue(I00State state, String nameRegister) {
+    public static String getRegisterValue(CPUState state, String nameRegister) {
         String result = null;
 
         switch (nameRegister) {
@@ -209,19 +226,19 @@ public class Common {
     }
 
     //возвращает значения регистров External в 2-м коде
-    public static String getUIExternalRegisterValue(I00StateExternal external, Integer numUI, String nameRegister) {
+    public static String getUIExternalRegisterValue(CPUStateExternal external, Integer numUI, String nameRegister)
+    {
         String result = null;
 
-        switch (nameRegister) {
+        switch (nameRegister)
+        {
             case "IS":
-
-                if (numUI == 0) result = external.i00StateExternalUI0.is.getValue();
-                else result = external.i00StateExternalUI1.is.getValue();
+                if (numUI == 0) result = external.cpuStateExternalUI0.da.getValue();
+                else result = external.cpuStateExternalUI1.da.getValue();
                 break;
-
             case "IOD":
-                if (numUI == 0) result = external.i00StateExternalUI0.iod.getValue();
-                else result = external.i00StateExternalUI1.iod.getValue();
+                if (numUI == 0) result = external.cpuStateExternalUI0.iod.getValue();
+                else result = external.cpuStateExternalUI1.iod.getValue();
                 break;
         }
 

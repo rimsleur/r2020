@@ -244,10 +244,10 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B1", false);
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B0", false);
 
-		drawFrame (520, 10, 200, 435, "External");
+		drawFrame (520, 10, 200, 480, "External");
 
 		//отрисовка UI0
-		drawFrame(530, 30, 180, 190, "UI0");
+		drawFrame(530, 30, 180, 210, "UI0");
 
 		drawFrame (535, 45, 168, 50, "DA");
 		pinX = 540;
@@ -273,22 +273,24 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B1", false);
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B0", false);
 
-		drawHorizontalPin (530, 420, 64, "CLK", false);
+		drawHorizontalPin (530, 465, 64, "CLK", false);
 
 		//отрисовка DIR, EREQ, STB, IRDY (External)
-		drawFrame (535, 160, 168, 50, "");
+		drawFrame (535, 160, 168, 70, "");
 		drawHorizontalPin (545, 165, 64, "DIR", false);
 		drawHorizontalPin (545, 185, 64, "EREQ", false);
+		drawHorizontalPin (545, 205, 64, "CTL", false);
 		drawHorizontalPin (635, 165, 64, "STB", false);
 		drawHorizontalPin (635, 185, 64, "DRDY", true);
+		drawHorizontalPin (635, 205, 64, "IREQ", true);
 
 		//отрисовка UI1
-		drawFrame(530, 230, 180, 185, "UI1");
+		drawFrame(530, 250, 180, 210, "UI1");
 
 		//отрисовка IS (UI1)
-		drawFrame (535, 245, 168, 50, "DA");
+		drawFrame (535, 265, 168, 50, "DA");
 		pinX = 540;
-		pinY = 258;
+		pinY = 278;
 		drawVerticalPin (pinX, pinY, "B7", false);
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B6", false);
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B5", false);
@@ -299,9 +301,9 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B0", false);
 
 		//отрисовка IOD (UI1)
-		drawFrame (535, 305, 168, 50, "IOD");
+		drawFrame (535, 325, 168, 50, "IOD");
 		pinX = 540;
-		pinY = 318;
+		pinY = 338;
 		drawVerticalPin (pinX, pinY, "B7", false);
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B6", false);
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B5", false);
@@ -312,17 +314,19 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B0", false);
 
 		//отрисовка DIR, EREQ, STB, IRDY (U1)
-		drawFrame (535, 360, 168, 50, "");
-		drawHorizontalPin (545, 365, 64, "DIR", false);
-		drawHorizontalPin (545, 385, 64, "EREQ", false);
-		drawHorizontalPin (635, 365, 64, "STB", false);
-		drawHorizontalPin (635, 385, 64, "DRDY", true);
+		drawFrame (535, 380, 168, 70, "");
+		drawHorizontalPin (545, 385, 64, "DIR", false);
+		drawHorizontalPin (545, 405, 64, "EREQ", false);
+		drawHorizontalPin (545, 425, 64, "CTL", false);
+		drawHorizontalPin (635, 385, 64, "STB", false);
+		drawHorizontalPin (635, 405, 64, "DRDY", true);
+		drawHorizontalPin (635, 425, 64, "IREQ", true);
 
 		//отрисовка UIBus
-		drawFrame(730, 10, 200,435, "Bus");
+		drawFrame(730, 10, 200, 460, "Bus");
 
 		//отрисовка UIBus0
-		drawFrame(740, 30, 180,190, "UB0");
+		drawFrame(740, 30, 180, 210, "UB0");
 
 		//отрисовка ISB (UIBus0)
 		drawFrame (745, 45, 168, 50, "DA");
@@ -351,19 +355,21 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B0", false);
 
 		//отрисовка RW, STB, RDY (UIBus0)
-		drawFrame (745, 160, 168, 50, "");
+		drawFrame (745, 160, 168, 70, "");
 		drawHorizontalPin (750, 165, 64, "DIR", false);
 		drawHorizontalPin (750, 185, 64, "EREQ", false);
+		drawHorizontalPin (750, 205, 64, "CTL", false);
 		drawHorizontalPin (845, 165, 64, "STB", false);
 		drawHorizontalPin (845, 185, 64, "DRDY", true);
+		drawHorizontalPin (845, 205, 64, "IREQ", true);
 
 		//отрисовка UIBus1
-		drawFrame(740, 230, 180,185, "UB1");
+		drawFrame(740, 250, 180, 210, "UB1");
 
 		//отрисовка ISB (UIBus1)
-		drawFrame (745, 245, 168, 50, "DA");
+		drawFrame (745, 265, 168, 50, "DA");
 		pinX = 750;
-		pinY = 258;
+		pinY = 278;
 		drawVerticalPin (pinX, pinY, "B7", false);
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B6", false);
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B5", false);
@@ -374,9 +380,9 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B0", false);
 
 		//отрисовка DB (UIBus1)
-		drawFrame (745, 305, 168, 50, "IOD");
+		drawFrame (745, 325, 168, 50, "IOD");
 		pinX = 750;
-		pinY = 318;
+		pinY = 338;
 		drawVerticalPin (pinX, pinY, "B7", false);
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B6", false);
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B5", false);
@@ -387,11 +393,13 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B0", false);
 
 		//отрисовка RW, STB, RDY (UIBus1)
-		drawFrame (745, 360, 168, 50, "");
-		drawHorizontalPin (750, 365, 64, "DIR", false);
-		drawHorizontalPin (750, 385, 64, "EREQ", false);
-		drawHorizontalPin (845, 365, 64, "STB", false);
-		drawHorizontalPin (845, 385, 64, "DRDY", true);
+		drawFrame (745, 380, 168, 70, "");
+		drawHorizontalPin (750, 385, 64, "DIR", false);
+		drawHorizontalPin (750, 405, 64, "EREQ", false);
+		drawHorizontalPin (750, 425, 64, "CTL", false);
+		drawHorizontalPin (845, 385, 64, "STB", false);
+		drawHorizontalPin (845, 405, 64, "DRDY", true);
+		drawHorizontalPin (845, 425, 64, "IREQ", true);
 
 		//отрисовка рамки Status Bar
 		drawFrame(0, HEIGHT - 21, WIDTH - 1, 20, "");
@@ -435,7 +443,7 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.cpuStateExternalUI0.iod.b1);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.cpuStateExternalUI0.iod.b0);
 
-		redrawHorizontalPin (530, 420, 64, cpuState.external.clk);
+		redrawHorizontalPin (530, 465, 64, cpuState.external.clk);
 
 		//перерисовываю CMDR
 		pinX = 140;
@@ -509,21 +517,16 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.internal.r2.b1);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.internal.r2.b0);
 
-		//перерисовываю DIR (UI0)
 		redrawHorizontalPin (545, 165, 64, cpuState.external.cpuStateExternalUI0.dir);
-
-		//перерисовываю EREQ (UI0)
 		redrawHorizontalPin (545, 185, 64, cpuState.external.cpuStateExternalUI0.ereq);
-
-		//перерисовываю STB (UI0)
+		redrawHorizontalPin (545, 205, 64, cpuState.external.cpuStateExternalUI0.ctl);
 		redrawHorizontalPin (635, 165, 64, cpuState.external.cpuStateExternalUI0.stb);
-
-		//перерисовываю IRDY (UI0)
 		redrawHorizontalPin (635, 185, 64, cpuState.external.cpuStateExternalUI0.drdy);
+		redrawHorizontalPin (635, 205, 64, cpuState.external.cpuStateExternalUI0.ireq);
 
 		//перерисовываю IS (UI1)
 		pinX = 540;
-		pinY = 258;
+		pinY = 278;
 		redrawVerticalPin (pinX, pinY, cpuState.external.cpuStateExternalUI1.da.b7);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.cpuStateExternalUI1.da.b6);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.cpuStateExternalUI1.da.b5);
@@ -535,7 +538,7 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 
 		//перерисовываю IOD (UI1)
 		pinX = 540;
-		pinY = 318;
+		pinY = 338;
 		redrawVerticalPin (pinX, pinY, cpuState.external.cpuStateExternalUI1.iod.b7);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.cpuStateExternalUI1.iod.b6);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.cpuStateExternalUI1.iod.b5);
@@ -545,17 +548,12 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.cpuStateExternalUI1.iod.b1);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.cpuStateExternalUI1.iod.b0);
 
-		//перерисовываю DIR (UI1)
-		redrawHorizontalPin (545, 365, 64, cpuState.external.cpuStateExternalUI1.dir);
-
-		//перерисовываю EREQ (UI1)
-		redrawHorizontalPin (545, 385, 64, cpuState.external.cpuStateExternalUI1.ereq);
-
-		//перерисовываю STB (UI1)
-		redrawHorizontalPin (635, 365, 64, cpuState.external.cpuStateExternalUI1.stb);
-
-		//перерисовываю IRDY (UI1)
-		redrawHorizontalPin (635, 385, 64, cpuState.external.cpuStateExternalUI1.drdy);
+		redrawHorizontalPin (545, 385, 64, cpuState.external.cpuStateExternalUI1.dir);
+		redrawHorizontalPin (545, 405, 64, cpuState.external.cpuStateExternalUI1.ereq);
+		redrawHorizontalPin (545, 425, 64, cpuState.external.cpuStateExternalUI1.ctl);
+		redrawHorizontalPin (635, 385, 64, cpuState.external.cpuStateExternalUI1.stb);
+		redrawHorizontalPin (635, 405, 64, cpuState.external.cpuStateExternalUI1.drdy);
+		redrawHorizontalPin (635, 405, 64, cpuState.external.cpuStateExternalUI1.ireq);
 
 		UB0State ub0State = UB0State.getInstance();
 
@@ -587,17 +585,12 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, iod.b1);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, iod.b0);
 
-		//перерисовываю DIR (UIBus0)
 		redrawHorizontalPin (750, 165, 64, ub0State.getDir());
-
-		//перерисовываю EREQ (UIBus0)
 		redrawHorizontalPin (750, 185, 64, ub0State.getEreq());
-
-		//перерисовываю STB (UIBus0)
+		redrawHorizontalPin (750, 205, 64, ub0State.getCtl());
 		redrawHorizontalPin (845, 165, 64, ub0State.getStb());
-
-		//перерисовываю IRDY (UIBus0)
 		redrawHorizontalPin (845, 185, 64, ub0State.getDrdy());
+		redrawHorizontalPin (845, 205, 64, ub0State.getIreq());
 
 		UB1State ub1State = UB1State.getInstance();
 
@@ -605,7 +598,7 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 
 		//перерисовываю ISB (UIBus1)
 		pinX = 750;
-		pinY = 258;
+		pinY = 278;
 		redrawVerticalPin (pinX, pinY, ub1StateDA.b7);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ub1StateDA.b6);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ub1StateDA.b5);
@@ -619,7 +612,7 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 
 		//перерисовываю DB (UIBusBus1)
 		pinX = 750;
-		pinY = 318;
+		pinY = 338;
 		redrawVerticalPin (pinX, pinY, ub1StateIOD.b7);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ub1StateIOD.b6);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ub1StateIOD.b5);
@@ -629,17 +622,12 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ub1StateIOD.b1);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ub1StateIOD.b0);
 
-		//перерисовываю DIR (UIBus1)
-		redrawHorizontalPin (750, 365, 64, ub1State.getDir());
-
-		//перерисовываю EREQ (UIBus1)
-		redrawHorizontalPin (750, 385, 64, ub1State.getEreq());
-
-		//перерисовываю STB (UIBus1)
-		redrawHorizontalPin (845, 365, 64, ub1State.getStb());
-
-		//перерисовываю IRDY (UIBus1)
-		redrawHorizontalPin (845, 385, 64, ub1State.getDrdy());
+		redrawHorizontalPin (750, 385, 64, ub1State.getDir());
+		redrawHorizontalPin (750, 405, 64, ub1State.getEreq());
+		redrawHorizontalPin (750, 425, 64, ub1State.getCtl());
+		redrawHorizontalPin (845, 385, 64, ub1State.getStb());
+		redrawHorizontalPin (845, 405, 64, ub1State.getDrdy());
+		redrawHorizontalPin (845, 425, 64, ub1State.getIreq());
 	}
 
 	@Override

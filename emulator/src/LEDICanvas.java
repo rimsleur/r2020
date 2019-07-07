@@ -36,7 +36,7 @@ public class LEDICanvas extends ICanvas implements Runnable
 		this.frame.pack ();
 		this.frame.setResizable (false);
 		this.frame.setLocationRelativeTo (null);
-		this.frame.setLocation(800, 500);
+		this.frame.setLocation(780, 549);
 		this.frame.setVisible (true);
 	}
 

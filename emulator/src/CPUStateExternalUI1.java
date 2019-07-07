@@ -2,8 +2,10 @@ public class CPUStateExternalUI1
 {
     public BitState dir;
     public BitState ereq;
+    public BitState ctl;
     public BitState stb;
     public BitState drdy;
+    public BitState ireq;
     public CPUStateExternalUI1DA da;
     public CPUStateExternalUI1IOD iod;
 
@@ -12,8 +14,10 @@ public class CPUStateExternalUI1
     {
         this.dir = BitState.L;
         this.ereq = BitState.L;
+        this.ctl = BitState.L;
         this.stb = BitState.L;
-        this.drdy = BitState.H;
+        this.drdy = BitState.L;
+        this.ireq = BitState.L;
         this.da = new CPUStateExternalUI1DA (true);
         this.iod = new CPUStateExternalUI1IOD (true);
     }
@@ -23,8 +27,10 @@ public class CPUStateExternalUI1
         CPUStateExternalUI1 ui1 = new CPUStateExternalUI1 (false);
         ui1.dir = this.dir;
         ui1.ereq = this.ereq;
+        ui1.ctl = this.ctl;
         ui1.stb = this.stb;
         ui1.drdy = this.drdy;
+        ui1.ireq = this.ireq;
         ui1.da = this.da.copy ();
         ui1.iod = this.iod.copy ();
 

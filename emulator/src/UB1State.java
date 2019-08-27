@@ -6,7 +6,7 @@ public class UB1State
     private BitState ereq;
     private BitState ctl;
     private BitState stb;
-    private BitState drdy;
+    private BitState rdy;
     private BitState ireq;
     private UB1StateDA da;
     private UB1StateIOD iod;
@@ -15,7 +15,7 @@ public class UB1State
     private Boolean setEreqExecuted = false;
     private Boolean setCtlExecuted = false;
     private Boolean setStbExecuted = false;
-    private Boolean setDrdyExecuted = false;
+    private Boolean setRdyExecuted = false;
     private Boolean setIreqExecuted = false;
     private Boolean setDaExecuted = false;
     private Boolean setIodExecuted = false;
@@ -74,18 +74,18 @@ public class UB1State
         return this.stb;
     }
 
-    public synchronized void setDrdy (BitState drdy)
+    public synchronized void setRdy (BitState rdy)
     {
-        this.setDrdyExecuted = true;
-        this.drdy = drdy;
-        this.setDrdyExecuted = false;
+        this.setRdyExecuted = true;
+        this.rdy = rdy;
+        this.setRdyExecuted = false;
     }
 
-    public BitState getDrdy ()
+    public BitState getRdy ()
     {
-        if (this.setDrdyExecuted) return BitState.U;
+        if (this.setRdyExecuted) return BitState.U;
 
-        return this.drdy;
+        return this.rdy;
     }
 
     public synchronized void setIreq (BitState ireq)
@@ -105,21 +105,14 @@ public class UB1State
     public synchronized void setDa (String binaryCode)
     {
         this.setDaExecuted = true;
-        this.da.setValue(binaryCode);
-//        this.da.b7 = da.b7;
-//        this.da.b6 = da.b6;
-//        this.da.b5 = da.b5;
-//        this.da.b4 = da.b4;
-//        this.da.b3 = da.b3;
-//        this.da.b2 = da.b2;
-//        this.da.b1 = da.b1;
-//        this.da.b0 = da.b0;
+
+        this.da.setValue (binaryCode);
+
         this.setDaExecuted = false;
     }
 
     public String getDa ()
     {
-
         if (this.setDaExecuted) return null;
 
         return this.da.getValue();
@@ -142,8 +135,7 @@ public class UB1State
 
     public String getIod ()
     {
-        if (this.setIodExecuted) return null;
-
+        while (this.setIodExecuted);
         return this.iod.getValue ();
     }
 
@@ -181,7 +173,7 @@ public class UB1State
         setEreq (BitState.L);
         setCtl (BitState.L);
         setStb (BitState.L);
-        setDrdy (BitState.H);
+        setRdy (BitState.H);
         setIreq (BitState.H);
         this.da = new UB1StateDA (true);
         this.iod = new UB1StateIOD (true);

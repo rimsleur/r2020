@@ -6,7 +6,7 @@ public class UB0State
     private BitState ereq;
     private BitState ctl;
     private BitState stb;
-    private BitState drdy;
+    private BitState rdy;
     private BitState ireq;
     private UB0StateDA da;
     private UB0StateIOD iod;
@@ -15,7 +15,7 @@ public class UB0State
     private Boolean setEreqExecuted = false;
     private Boolean setCtlExecuted = false;
     private Boolean setStbExecuted = false;
-    private Boolean setDrdyExecuted = false;
+    private Boolean setRdyExecuted = false;
     private Boolean setIreqExecuted = false;
     private Boolean setDaExecuted = false;
     private Boolean setIodExecuted = false;
@@ -75,18 +75,18 @@ public class UB0State
         return this.stb;
     }
 
-    public synchronized void setDrdy (BitState drdy)
+    public synchronized void setRdy (BitState rdy)
     {
-        this.setDrdyExecuted = true;
-        this.drdy = drdy;
-        this.setDrdyExecuted = false;
+        this.setRdyExecuted = true;
+        this.rdy = rdy;
+        this.setRdyExecuted = false;
     }
 
-    public BitState getDrdy ()
+    public BitState getRdy ()
     {
-        if (this.setDrdyExecuted) return BitState.U;
+        if (this.setRdyExecuted) return BitState.U;
 
-        return this.drdy;
+        return this.rdy;
     }
 
     public synchronized void setIreq (BitState ireq)
@@ -144,8 +144,7 @@ public class UB0State
 
     public String getIod ()
     {
-        if (this.setIodExecuted) return null;
-
+        while (this.setIodExecuted);
         return this.iod.getValue ();
     }
 
@@ -169,8 +168,8 @@ public class UB0State
         setEreq (BitState.L);
         setCtl (BitState.L);
         setStb (BitState.L);
-        setDrdy (BitState.H);
-        setIreq (BitState.H);
+        setRdy (BitState.L);
+        setIreq (BitState.L);
         this.da = new UB0StateDA (true);
         this.iod = new UB0StateIOD (true);
     }

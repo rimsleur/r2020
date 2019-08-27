@@ -2,25 +2,25 @@ public class CPUStateExternal
 {
 
 	public BitState clk;
-	public CPUStateExternalUI0 cpuStateExternalUI0;
-	public CPUStateExternalUI1 cpuStateExternalUI1;
+	public CPUStateExternalUI0 ui0;
+	public CPUStateExternalUI1 ui1;
 
 	public CPUStateExternal (Boolean init)
 	{
 		if (init)
 		{
 			this.clk = BitState.L;
-			this.cpuStateExternalUI0 = new CPUStateExternalUI0(true);
-			this.cpuStateExternalUI1 = new CPUStateExternalUI1(true);
+			this.ui0 = new CPUStateExternalUI0 (true);
+			this.ui1 = new CPUStateExternalUI1 (true);
 		}
 	}
 
-	public CPUStateExternal copy()
+	public CPUStateExternal copy ()
 	{
-		CPUStateExternal cpuStateExternal = new CPUStateExternal(false);
+		CPUStateExternal cpuStateExternal = new CPUStateExternal (false);
 		cpuStateExternal.clk = this.clk;
-		cpuStateExternal.cpuStateExternalUI0 = this.cpuStateExternalUI0.copy();
-		cpuStateExternal.cpuStateExternalUI1 = this.cpuStateExternalUI1.copy();
+		cpuStateExternal.ui0 = this.ui0.copy ();
+		cpuStateExternal.ui1 = this.ui1.copy ();
 
 		return cpuStateExternal;
 	}

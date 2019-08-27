@@ -76,6 +76,10 @@ public class ICanvas extends Canvas
 	protected void redrawVerticalPin (Integer x, Integer y, BitState state)
 	{
 		if (state == BitState.H) this.graphics.setColor (Color.BLACK);
+
+		if (state == BitState.H) this.graphics.setColor (Color.BLACK);
+		else if (state == BitState.L) this.graphics.setColor (Color.WHITE);
+		else if (state == BitState.Z) this.graphics.setColor(Color.GRAY);
 		else this.graphics.setColor (Color.WHITE);
 		int size = this.PINSIDESIZE - 2;
 		this.graphics.fillRect (x + 1, y + 1, size, size);
@@ -104,8 +108,8 @@ public class ICanvas extends Canvas
 	protected void redrawHorizontalPin (Integer x, Integer y, Integer width, BitState state)
 	{
 		if (state == BitState.H) this.graphics.setColor (Color.BLACK);
-		else this.graphics.setColor (Color.WHITE);
-		if (state == BitState.Z) this.graphics.setColor(Color.GRAY);
+		else if (state == BitState.L) this.graphics.setColor (Color.WHITE);
+		else if (state == BitState.Z) this.graphics.setColor(Color.GRAY);
 		int size = this.PINSIDESIZE - 2;
 		int pinX = x + width - this.PINSIDESIZE;
 		this.graphics.fillRect (pinX + 1, y + 1, size, size);

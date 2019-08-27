@@ -1,0 +1,1 @@
+public enum CommandCycle {CYCLE1, CYCLE2, CYCLE3}

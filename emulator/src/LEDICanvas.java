@@ -4,12 +4,15 @@ import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferStrategy;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 
-public class LEDICanvas extends ICanvas implements Runnable
+public class LEDICanvas extends ICanvas implements Runnable, KeyListener
 {
-	public static final Integer WIDTH = 250;
-	public static final Integer HEIGHT = WIDTH / 12 * 9;
+	public static final Integer WIDTH = 155;
+	public static final Integer WIDTH_EXPANDED = 334;
+	public static final Integer HEIGHT = 158;
 
 	private static Integer PINSIDESIZE = 19;
 	private static Integer PINSTEPSIZE = PINSIDESIZE + 1;
@@ -20,25 +23,48 @@ public class LEDICanvas extends ICanvas implements Runnable
 	private Font font;
 
 	private Boolean running = false;
+	private Boolean expand = false;
 
 	private LEDI ledi = new LEDI ();
 
 	public LEDICanvas ()
 	{
-		setMinimumSize (new Dimension (WIDTH, HEIGHT));
-		setMaximumSize (new Dimension (WIDTH, HEIGHT));
-		setPreferredSize (new Dimension (WIDTH, HEIGHT));
-
 		this.frame = new JFrame ("LED indicator");
 		this.frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 		this.frame.setLayout (new BorderLayout ());
 		this.frame.add (this, BorderLayout.CENTER);
 		this.frame.pack ();
 		this.frame.setResizable (false);
+		if (expand) this.frame.setSize (new Dimension (WIDTH_EXPANDED, HEIGHT));
+		else this.frame.setSize (new Dimension (WIDTH, HEIGHT));
 		this.frame.setLocationRelativeTo (null);
-		this.frame.setLocation(780, 549);
+		this.frame.setLocation(830, 549);
 		this.frame.setVisible (true);
+
+		setFocusTraversalKeysEnabled (false);
+		addKeyListener (this);
 	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {}
+
+	@Override
+	public void keyPressed(KeyEvent e)
+	{
+		if (e.getKeyCode() == 9)
+		{
+			expand = !expand;
+			this.frame.setVisible (false);
+			this.frame.dispose ();
+			if (expand) this.frame.setSize (new Dimension (WIDTH_EXPANDED, HEIGHT));
+			else this.frame.setSize (new Dimension (WIDTH, HEIGHT));
+			this.frame.setVisible (true);
+			if (this.draw ()) this.redraw ();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {}
 
 	public synchronized void start ()
 	{
@@ -60,13 +86,13 @@ public class LEDICanvas extends ICanvas implements Runnable
 			return;
 		}
 
-		this.ledi.setUIBusIndex(1);
+		this.ledi.setUbIndex(1);
 
 		while (this.running)
 		{
 			calculate ();
 			redraw ();
-			sleep (30);
+			sleep (50);
 		}
 	}
 
@@ -119,65 +145,67 @@ public class LEDICanvas extends ICanvas implements Runnable
 	@Override
 	protected final void drawComponets ()
 	{
-		Integer pinX;
-		Integer pinY;
+		if (expand)
+		{
+			drawFrame (10, 10, 168, 50, "");
+			drawHorizontalPin (15, 15, 64, "DS", false);
+			drawHorizontalPin (15, 35, 64, "IREQ", true);
+			drawHorizontalPin (110, 15, 64, "RDY", true);
+			drawHorizontalPin (110, 35, 64, "STB", true);
 
-		//отображение флагов I1F
-		drawFrame(30, 30, 188, 40, "");
+			drawFrame (10, 70, 168, 50, "IOD");
+			Integer pinX = 15;
+			Integer pinY = 80;
+			drawVerticalPin (pinX, pinY, "B7", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B6", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B5", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B4", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B3", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B2", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B1", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B0", false);
+		}
 
-		//отображение SEL
-		pinX = 40;
-		pinY = 40;
-		drawHorizontalPin(pinX, pinY,64, "DS", false);
-
-		//отображение RDY
-		pinX = 135;
-		pinY = 40;
-		drawHorizontalPin(pinX, pinY,64, "DRDY", true);
-
-
-		drawFrame (30, 80, 188, 50, "IOD");
-		pinX = 40;
-		pinY = 90;
-		drawVerticalPin (pinX, pinY, "B7", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B6", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B5", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B4", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B3", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B2", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B1", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B0", false);
+		Integer topLeftX;
+		if (expand) topLeftX = 188;
+		else topLeftX = 10;
+		Integer topLeftY = 10;
+		this.drawDigit (topLeftX, topLeftY);
+		topLeftX += 70;
+		this.drawDigit (topLeftX, topLeftY);
 	}
 
 	@Override
 	protected final void redrawComponets ()
 	{
-		Integer pinX;
-		Integer pinY;
-
 		LEDIState lediState = this.ledi.getLEDIState ();
 
-		//перерисовываю A0
-		pinX = 40;
-		pinY = 90;
-		redrawVerticalPin (pinX, pinY, lediState.iod.b7);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b6);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b5);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b4);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b3);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b2);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b1);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b0);
+		if (expand)
+		{
+			redrawHorizontalPin (15, 15, 64, lediState.ds);
+			redrawHorizontalPin (15, 35, 64, lediState.ireq);
+			redrawHorizontalPin (110, 15, 64, lediState.rdy);
+			redrawHorizontalPin (110, 35, 64, lediState.stb);
 
-		//перерисовываю SEL
-		pinX = 40;
-		pinY = 40;
-		redrawHorizontalPin(pinX, pinY, 64, lediState.ds);
+			Integer pinX = 15;
+			Integer pinY = 80;
+			redrawVerticalPin (pinX, pinY, lediState.iod.b7);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b6);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b5);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b4);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b3);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b2);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b1);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, lediState.iod.b0);
+		}
 
-		//перерисовываю RDY
-		pinX = 135;
-		pinY = 40;
-		redrawHorizontalPin(pinX, pinY, 64, lediState.drdy);
+		Integer topLeftX;
+		if (expand) topLeftX = 188;
+		else topLeftX = 10;
+		Integer topLeftY = 10;
+		this.redrawDigit (topLeftX, topLeftY, lediState.digit1);
+		topLeftX += 70;
+		this.redrawDigit (topLeftX, topLeftY, lediState.digit2);
 	}
 
 	@Override
@@ -210,7 +238,175 @@ public class LEDICanvas extends ICanvas implements Runnable
 		super.redrawHorizontalPin (x, y, width, state);
 	}
 
+	private void drawDigit (Integer topLeftX, Integer topLeftY)
+	{
+		Integer segmentLenght = 40;
+		Integer segmentWidth = 7;
+		Integer shift = 2;
+		this.graphics.setColor(Color.LIGHT_GRAY);
+		Integer x = topLeftX + segmentWidth + shift;
+		Integer y = topLeftY;
+		this.graphics.drawLine (x, y, x + segmentLenght, y);
+		this.graphics.drawLine (x + segmentLenght, y, x + segmentLenght, y + segmentWidth);
+		this.graphics.drawLine (x, y, x, y + segmentWidth);
+		this.graphics.drawLine (x, y + segmentWidth, x + segmentLenght, y + segmentWidth);
+		x = topLeftX;
+		y = topLeftY + segmentWidth + shift;
+		this.graphics.drawLine (x, y, x + segmentWidth, y);
+		this.graphics.drawLine (x + segmentWidth, y, x + segmentWidth, y + segmentLenght);
+		this.graphics.drawLine (x, y, x, y + segmentLenght);
+		this.graphics.drawLine (x, y + segmentLenght, x + segmentWidth, y + segmentLenght);
+		x = topLeftX + segmentLenght + shift + segmentWidth + shift;
+		y = topLeftY + segmentWidth + shift;
+		this.graphics.drawLine (x, y, x + segmentWidth, y);
+		this.graphics.drawLine (x + segmentWidth, y, x + segmentWidth, y + segmentLenght);
+		this.graphics.drawLine (x, y, x, y + segmentLenght);
+		this.graphics.drawLine (x, y + segmentLenght, x + segmentWidth, y + segmentLenght);
+		x = topLeftX + segmentWidth + shift;
+		y = topLeftY + segmentLenght + shift + segmentWidth + shift;
+		this.graphics.drawLine (x, y, x + segmentLenght, y);
+		this.graphics.drawLine (x + segmentLenght, y, x + segmentLenght, y + segmentWidth);
+		this.graphics.drawLine (x, y, x, y + segmentWidth);
+		this.graphics.drawLine (x, y + segmentWidth, x + segmentLenght, y + segmentWidth);
+		x = topLeftX;
+		y = topLeftY + segmentWidth + shift + segmentLenght + shift + segmentWidth + shift;
+		this.graphics.drawLine (x, y, x + segmentWidth, y);
+		this.graphics.drawLine (x + segmentWidth, y, x + segmentWidth, y + segmentLenght);
+		this.graphics.drawLine (x, y, x, y + segmentLenght);
+		this.graphics.drawLine (x, y + segmentLenght, x + segmentWidth, y + segmentLenght);
+		x = topLeftX + segmentLenght + shift + segmentWidth + shift;
+		y = topLeftY + segmentWidth + shift + segmentLenght + shift + segmentWidth + shift;
+		this.graphics.drawLine (x, y, x + segmentWidth, y);
+		this.graphics.drawLine (x + segmentWidth, y, x + segmentWidth, y + segmentLenght);
+		this.graphics.drawLine (x, y, x, y + segmentLenght);
+		this.graphics.drawLine (x, y + segmentLenght, x + segmentWidth, y + segmentLenght);
+		x = topLeftX + segmentWidth + shift;
+		y = topLeftY + segmentLenght + shift + segmentWidth + shift + segmentLenght + shift + segmentWidth + shift;
+		this.graphics.drawLine (x, y, x + segmentLenght, y);
+		this.graphics.drawLine (x + segmentLenght, y, x + segmentLenght, y + segmentWidth);
+		this.graphics.drawLine (x, y, x, y + segmentWidth);
+		this.graphics.drawLine (x, y + segmentWidth, x + segmentLenght, y + segmentWidth);
+	}
 
+	private void redrawDigit (Integer topLeftX, Integer topLeftY, String digit)
+	{
+		Integer segmentLenght = 40;
+		Integer segmentWidth = 7;
+		Integer shift = 2;
+		// ГоризонтальнаA верх
+		if (digit.equals ("0") ||
+			digit.equals ("2") ||
+			digit.equals ("3") ||
+			digit.equals ("5") ||
+			digit.equals ("6") ||
+			digit.equals ("7") ||
+			digit.equals ("8") ||
+			digit.equals ("9") ||
+			digit.equals ("A") ||
+			digit.equals ("C") ||
+			digit.equals ("E") ||
+			digit.equals ("F")) this.graphics.setColor(Color.BLACK);
+		else this.graphics.setColor(Color.WHITE);
+		Integer x = topLeftX + segmentWidth + shift;
+		Integer y = topLeftY;
+		this.graphics.fillRect (x + 1, y + 1, segmentLenght - 1, segmentWidth - 1);
+		// Вертикальная лево верх
+		if (digit.equals ("0") ||
+			digit.equals ("4") ||
+			digit.equals ("5") ||
+			digit.equals ("6") ||
+			digit.equals ("8") ||
+			digit.equals ("9") ||
+			digit.equals ("A") ||
+			digit.equals ("B") ||
+			digit.equals ("C") ||
+			digit.equals ("E") ||
+			digit.equals ("F")) this.graphics.setColor(Color.BLACK);
+		else this.graphics.setColor(Color.WHITE);
+		x = topLeftX;
+		y = topLeftY + segmentWidth + shift;
+		this.graphics.fillRect (x + 1, y + 1, segmentWidth - 1, segmentLenght - 1);
+		// Вертикальная право верх
+		if (digit.equals ("0") ||
+			digit.equals ("1") ||
+			digit.equals ("2") ||
+			digit.equals ("3") ||
+			digit.equals ("4") ||
+			digit.equals ("7") ||
+			digit.equals ("8") ||
+			digit.equals ("9") ||
+			digit.equals ("A") ||
+			digit.equals ("D")) this.graphics.setColor(Color.BLACK);
+		else this.graphics.setColor(Color.WHITE);
+		x = topLeftX + segmentLenght + shift + segmentWidth + shift;
+		y = topLeftY + segmentWidth + shift;
+		this.graphics.fillRect (x + 1, y + 1, segmentWidth - 1, segmentLenght - 1);
+		// Горизонтальная средняя
+		if (digit.equals ("2") ||
+			digit.equals ("3") ||
+			digit.equals ("4") ||
+			digit.equals ("5") ||
+			digit.equals ("6") ||
+			digit.equals ("8") ||
+			digit.equals ("9") ||
+			digit.equals ("A") ||
+			digit.equals ("B") ||
+			digit.equals ("D") ||
+			digit.equals ("E") ||
+			digit.equals ("F")) this.graphics.setColor(Color.BLACK);
+		else this.graphics.setColor(Color.WHITE);
+		x = topLeftX + segmentWidth + shift;
+		y = topLeftY + segmentLenght + shift + segmentWidth + shift;
+		this.graphics.fillRect (x + 1, y + 1, segmentLenght - 1, segmentWidth - 1);
+		// Вертикальная лево низ
+		if (digit.equals ("0") ||
+			digit.equals ("2") ||
+			digit.equals ("6") ||
+			digit.equals ("8") ||
+			digit.equals ("A") ||
+			digit.equals ("B") ||
+			digit.equals ("C") ||
+			digit.equals ("D") ||
+			digit.equals ("E") ||
+			digit.equals ("F")) this.graphics.setColor(Color.BLACK);
+		else this.graphics.setColor(Color.WHITE);
+		x = topLeftX;
+		y = topLeftY + segmentWidth + shift + segmentLenght + shift + segmentWidth + shift;
+		this.graphics.fillRect (x + 1, y + 1, segmentWidth - 1, segmentLenght - 1);
+		// Вертикальная право низ
+		if (digit.equals ("0") ||
+			digit.equals ("1") ||
+			digit.equals ("3") ||
+			digit.equals ("4") ||
+			digit.equals ("5") ||
+			digit.equals ("6") ||
+			digit.equals ("7") ||
+			digit.equals ("8") ||
+			digit.equals ("9") ||
+			digit.equals ("A") ||
+			digit.equals ("B") ||
+			digit.equals ("D")) this.graphics.setColor(Color.BLACK);
+		else this.graphics.setColor(Color.WHITE);
+		x = topLeftX + segmentLenght + shift + segmentWidth + shift;
+		y = topLeftY + segmentWidth + shift + segmentLenght + shift + segmentWidth + shift;
+		this.graphics.fillRect (x + 1, y + 1, segmentWidth - 1, segmentLenght - 1);
+		// Горизонтальная низ
+		if (digit.equals ("0") ||
+			digit.equals ("2") ||
+			digit.equals ("3") ||
+			digit.equals ("5") ||
+			digit.equals ("6") ||
+			digit.equals ("8") ||
+			digit.equals ("9") ||
+			digit.equals ("B") ||
+			digit.equals ("C") ||
+			digit.equals ("D") ||
+			digit.equals ("E")) this.graphics.setColor(Color.BLACK);
+		else this.graphics.setColor(Color.WHITE);
+		x = topLeftX + segmentWidth + shift;
+		y = topLeftY + segmentLenght + shift + segmentWidth + shift + segmentLenght + shift + segmentWidth + shift;
+		this.graphics.fillRect (x + 1, y + 1, segmentLenght - 1, segmentWidth - 1);
+	}
 
 	private void sleep (Integer n)
 	{

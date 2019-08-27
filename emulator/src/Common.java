@@ -13,17 +13,17 @@ public class Common
     //16-й код команд
     static String[] commandsHex = new String[]{"0x00", "0x01", "0x02", "0x03", "0x04", "0x05", "0x06", "0x07"};
 
-    private static CommandStep[] countSteps = new CommandStep[]
-            {
-                    CommandStep.STEP2, // NOP
-                    CommandStep.STEP6, // LDI
-                    CommandStep.STEP4, // SELI0
-                    CommandStep.STEP4, // SEL
-                    CommandStep.STEP6, // MOV
-                    CommandStep.STEP4, // OUT0
-                    CommandStep.STEP4, // SELI1
-                    CommandStep.STEP4  // OUT1
-            };
+    private static CommandCycle[] commandCycles = new CommandCycle[]
+    {
+        CommandCycle.CYCLE1, // NOP
+        CommandCycle.CYCLE3, // LDI
+        CommandCycle.CYCLE2, // SELI0
+        CommandCycle.CYCLE2, // SEL
+        CommandCycle.CYCLE3, // MOV
+        CommandCycle.CYCLE2, // OUT0
+        CommandCycle.CYCLE2, // SELI1
+        CommandCycle.CYCLE2  // OUT1
+    };
 
     //названия регистров
     static String[] registersName = new String[]{"R0", "R1", "R2"};
@@ -34,53 +34,54 @@ public class Common
     private final static String zeroBinary = "00000000"; //константа для сбрасывания значения диодов
 
     //возвращает последний шаг для команды
-    public static CommandStep isLastStep(String binaryCode)
+    public static CommandCycle isLastCycle (String binaryCode)
     {
         for (int i = 0; i < commandsName.length; i++)
         {
-            if (binaryCode.equals(hexToBin(commandsHex[i]))) return countSteps[i];
+            if (binaryCode.equals (hexToBin (commandsHex[i]))) return commandCycles[i];
         }
 
         return null;
     }
-
+/*
     //изменяет регистр IS
     public static void setUIis(CPUStateExternal external, Integer numUI, String binaryCode)
     {
-        if (numUI == 0) external.cpuStateExternalUI0.da.setValue(binaryCode);
-        else external.cpuStateExternalUI1.da.setValue(binaryCode);
+        if (numUI == 0) external.ui0.da.setValue(binaryCode);
+        else external.ui1.da.setValue(binaryCode);
     }
-
+*/
+    /*
     //изменяет регистр IOD
     public static void setUIiod(CPUStateExternal external, Integer numUI, String binaryCode)
     {
-        if (numUI == 0) external.cpuStateExternalUI0.iod.setValue(binaryCode);
-        else external.cpuStateExternalUI1.iod.setValue(binaryCode);
+        if (numUI == 0) external.ui0.iod.setValue(binaryCode);
+        else external.ui1.iod.setValue(binaryCode);
     }
-
-
+*/
+/*
     //изменяет флаг DIR, EREQ, STB
     public static void setUIFlagExternal(CPUStateExternal external, Integer numUI, String nameFlag, BitState bitState)
     {
         switch (nameFlag)
         {
             case "DIR":
-                if (numUI == 0) external.cpuStateExternalUI0.dir = bitState;
-                else external.cpuStateExternalUI1.dir = bitState;
+                if (numUI == 0) external.ui0.dir = bitState;
+                else external.ui1.dir = bitState;
                 break;
 
             case "EREQ":
-                if (numUI == 0) external.cpuStateExternalUI0.ereq = bitState;
-                else external.cpuStateExternalUI1.ereq = bitState;
+                if (numUI == 0) external.ui0.ereq = bitState;
+                else external.ui1.ereq = bitState;
                 break;
 
             case "STB":
-                if (numUI == 0) external.cpuStateExternalUI0.stb = bitState;
-                else external.cpuStateExternalUI1.stb = bitState;
+                if (numUI == 0) external.ui0.stb = bitState;
+                else external.ui1.stb = bitState;
                 break;
         }
     }
-
+*/
     public static void setUIFlagBus(Integer numUI, String nameFlag, BitState bitState)
     {
         switch (nameFlag)
@@ -179,12 +180,12 @@ public class Common
         switch (nameRegister)
         {
             case "IS":
-                if (numUI == 0) external.cpuStateExternalUI0.da.setValue(zeroBinary);
-                else external.cpuStateExternalUI1.da.setValue(zeroBinary);
+                if (numUI == 0) external.ui0.da.setValue(zeroBinary);
+                else external.ui1.da.setValue(zeroBinary);
                 break;
             case "IOD":
-                if (numUI == 0) external.cpuStateExternalUI0.iod.setValue(zeroBinary);
-                else external.cpuStateExternalUI1.iod.setValue(zeroBinary);
+                if (numUI == 0) external.ui0.iod.setValue(zeroBinary);
+                else external.ui1.iod.setValue(zeroBinary);
                 break;
         }
     }
@@ -233,12 +234,12 @@ public class Common
         switch (nameRegister)
         {
             case "IS":
-                if (numUI == 0) result = external.cpuStateExternalUI0.da.getValue();
-                else result = external.cpuStateExternalUI1.da.getValue();
+                if (numUI == 0) result = external.ui0.da.getValue();
+                else result = external.ui1.da.getValue();
                 break;
             case "IOD":
-                if (numUI == 0) result = external.cpuStateExternalUI0.iod.getValue();
-                else result = external.cpuStateExternalUI1.iod.getValue();
+                if (numUI == 0) result = external.ui0.iod.getValue();
+                else result = external.ui1.iod.getValue();
                 break;
         }
 

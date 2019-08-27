@@ -13,14 +13,14 @@ public class RAMStateIOD implements SetValue
 	{
 		if (init)
 		{
-			this.b7 = BitState.L;
-			this.b6 = BitState.L;
-			this.b5 = BitState.L;
-			this.b4 = BitState.L;
-			this.b3 = BitState.L;
-			this.b2 = BitState.L;
-			this.b1 = BitState.L;
-			this.b0 = BitState.L;
+			this.b7 = BitState.Z;
+			this.b6 = BitState.Z;
+			this.b5 = BitState.Z;
+			this.b4 = BitState.Z;
+			this.b3 = BitState.Z;
+			this.b2 = BitState.Z;
+			this.b1 = BitState.Z;
+			this.b0 = BitState.Z;
 		}
 	}
 
@@ -49,5 +49,17 @@ public class RAMStateIOD implements SetValue
 		this.b2 = Common.getPinValue (binaryCode.charAt (5));
 		this.b1 = Common.getPinValue (binaryCode.charAt (6));
 		this.b0 = Common.getPinValue (binaryCode.charAt (7));
+	}
+
+	public void setToState (BitState bitState)
+	{
+		this.b7 = bitState;
+		this.b6 = bitState;
+		this.b5 = bitState;
+		this.b4 = bitState;
+		this.b3 = bitState;
+		this.b2 = bitState;
+		this.b1 = bitState;
+		this.b0 = bitState;
 	}
 }

@@ -5,7 +5,7 @@ public class CPUStateExternalUI0
     public BitState ereq;
     public BitState ctl;
     public BitState stb;
-    public BitState drdy;
+    public BitState rdy;
     public BitState ireq;
     public CPUStateExternalUI0DA da;
     public CPUStateExternalUI0IOD iod;
@@ -18,7 +18,7 @@ public class CPUStateExternalUI0
             this.ereq = BitState.L;
             this.ctl = BitState.L;
             this.stb = BitState.L;
-            this.drdy = BitState.L;
+            this.rdy = BitState.L;
             this.ireq = BitState.L;
             this.da = new CPUStateExternalUI0DA (init);
             this.iod = new CPUStateExternalUI0IOD (init);
@@ -32,7 +32,7 @@ public class CPUStateExternalUI0
         ui0.ereq = this.ereq;
         ui0.ctl = this.ctl;
         ui0.stb = this.stb;
-        ui0.drdy = this.drdy;
+        ui0.rdy = this.rdy;
         ui0.ireq = this.ireq;
         ui0.da = this.da.copy ();
         ui0.iod = this.iod.copy ();

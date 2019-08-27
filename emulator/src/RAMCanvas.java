@@ -1,11 +1,18 @@
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.image.BufferStrategy;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javax.swing.JFrame;
 
-public class RAMCanvas extends ICanvas implements Runnable
+public class RAMCanvas extends ICanvas implements Runnable, KeyListener
 {
-	public static final Integer WIDTH = 500;
-	public static final Integer HEIGHT = WIDTH / 12 * 9;
+	public static final Integer WIDTH = 388;
+	public static final Integer WIDTH_EXPANDED = 566;
+	public static final Integer HEIGHT = 265;
 
 	private static Integer PINSIDESIZE = 19;
 	private static Integer PINSTEPSIZE = PINSIDESIZE + 1;
@@ -16,6 +23,7 @@ public class RAMCanvas extends ICanvas implements Runnable
 	private Font font;
 
 	private Boolean running = false;
+	private Boolean expand = false;
 
 	private RAM ram = new RAM ();
 
@@ -26,20 +34,46 @@ public class RAMCanvas extends ICanvas implements Runnable
 
 	public RAMCanvas()
 	{
-		setMinimumSize (new Dimension (WIDTH, HEIGHT));
-		setMaximumSize (new Dimension (WIDTH, HEIGHT));
-		setPreferredSize (new Dimension (WIDTH, HEIGHT));
-
+		//setMinimumSize (new Dimension (WIDTH, HEIGHT));
+		//setMaximumSize (new Dimension (WIDTH, HEIGHT));
+		//setPreferredSize (new Dimension (WIDTH, HEIGHT));
+		
 		this.frame = new JFrame ("RAM");
 		this.frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 		this.frame.setLayout (new BorderLayout ());
 		this.frame.add (this, BorderLayout.CENTER);
 		this.frame.pack ();
 		this.frame.setResizable (false);
+		if (expand) this.frame.setSize (new Dimension (WIDTH_EXPANDED, HEIGHT));
+		else this.frame.setSize (new Dimension (WIDTH, HEIGHT));
 		this.frame.setLocationRelativeTo (null);
-		this.frame.setLocation(250, 360);
+		this.frame.setLocation(250, 440);
 		this.frame.setVisible (true);
+
+		setFocusTraversalKeysEnabled (false);
+		addKeyListener (this);
 	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {}
+
+	@Override
+	public void keyPressed(KeyEvent e)
+	{
+		if (e.getKeyCode() == 9)
+		{
+			expand = !expand;
+			this.frame.setVisible (false);
+			this.frame.dispose ();
+			if (expand) this.frame.setSize (new Dimension (WIDTH_EXPANDED, HEIGHT));
+			else this.frame.setSize (new Dimension (WIDTH, HEIGHT));
+			this.frame.setVisible (true);
+			if (this.draw ()) this.redraw ();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {}
 
 	public synchronized void start ()
 	{
@@ -61,13 +95,13 @@ public class RAMCanvas extends ICanvas implements Runnable
 			return;
 		}
 
-		this.ram.setUIBusIndex(0);
+		this.ram.setUbIndex (0);
 
 		while (this.running)
 		{
 			calculate ();
 			redraw ();
-			sleep (30);
+			sleep (50);
 		}
 	}
 
@@ -77,7 +111,7 @@ public class RAMCanvas extends ICanvas implements Runnable
 	}
 
 	@Override
-	protected final Boolean draw ()
+	protected synchronized final Boolean draw ()
 	{
 		this.bufferStrategy = getBufferStrategy ();
 		if (this.bufferStrategy == null)
@@ -86,8 +120,8 @@ public class RAMCanvas extends ICanvas implements Runnable
 			this.bufferStrategy = getBufferStrategy ();
 			if (this.bufferStrategy == null) return false;
 		}
-
 		this.graphics = bufferStrategy.getDrawGraphics ();
+		if (this.graphics == null) return false;
 		super.graphics = this.graphics;
 
 		this.graphics.setColor (Color.WHITE);
@@ -105,9 +139,10 @@ public class RAMCanvas extends ICanvas implements Runnable
 	}
 
 	@Override
-	protected final void redraw ()
+	protected synchronized final void redraw ()
 	{
 		this.graphics = bufferStrategy.getDrawGraphics ();
+		if (this.graphics == null) return;
 		super.graphics = this.graphics;
 		this.graphics.setFont (this.font);
 
@@ -120,37 +155,31 @@ public class RAMCanvas extends ICanvas implements Runnable
 	@Override
 	protected final void drawComponets ()
 	{
-		Integer pinX;
-		Integer pinY;
+		if (expand)
+		{
+			drawFrame (10, 10, 168, 50, "");
+			drawHorizontalPin (15, 15, 64, "DS", false);
+			drawHorizontalPin (15, 35, 64, "IREQ", true);
+			drawHorizontalPin (110, 15, 64, "RDY", true);
+			drawHorizontalPin (110, 35, 64, "STB", true);
 
-		//отображение флагов I1F
-		drawFrame(30, 30, 188, 40, "");
+			drawFrame (10, 70, 168, 50, "IOD");
+			Integer pinX = 15;
+			Integer pinY = 80;
+			drawVerticalPin (pinX, pinY, "B7", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B6", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B5", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B4", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B3", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B2", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B1", false);
+			drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B0", false);
+		}
 
-		//отображение SEL
-		pinX = 40;
-		pinY = 40;
-		drawHorizontalPin(pinX, pinY,64, "DS", false);
-
-		//отображение RDY
-		pinX = 135;
-		pinY = 40;
-		drawHorizontalPin(pinX, pinY,64, "DRDY", true);
-
-
-		drawFrame (30, 80, 188, 50, "IOD");
-		pinX = 40;
-		pinY = 90;
-		drawVerticalPin (pinX, pinY, "B7", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B6", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B5", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B4", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B3", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B2", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B1", false);
-		drawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, "B0", false);
-
-		Integer topLeftX = 30;
-		Integer topLeftY = 140;
+		Integer topLeftX;
+		if (expand) topLeftX = 188;
+		else topLeftX = 10;
+		Integer topLeftY = 10;
 		drawFrame (topLeftX, topLeftY, 361, 217, "Memory map");
 
 		//отрисовка rowTable
@@ -186,37 +215,33 @@ public class RAMCanvas extends ICanvas implements Runnable
 	@Override
 	protected final void redrawComponets ()
 	{
-		Integer pinX;
-		Integer pinY;
+		if (expand)
+		{
+			RAMState ramState = this.ram.getRAMState();
 
-		RAMState ramState = this.ram.getRAMState();
+			redrawHorizontalPin (15, 15, 64, ramState.ds);
+			redrawHorizontalPin (15, 35, 64, ramState.ireq);
+			redrawHorizontalPin (110, 15, 64, ramState.rdy);
+			redrawHorizontalPin (110, 35, 64, ramState.stb);
 
-		//перерисовываю A0
-		pinX = 40;
-		pinY = 90;
-		redrawVerticalPin (pinX, pinY, ramState.iod.b7);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b6);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b5);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b4);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b3);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b2);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b1);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b0);
-
-		//перерисовываю SEL
-		pinX = 40;
-		pinY = 40;
-		redrawHorizontalPin(pinX, pinY, 64, ramState.ds);
-
-		//перерисовываю RDY
-		pinX = 135;
-		pinY = 40;
-		redrawHorizontalPin(pinX, pinY, 64, ramState.drdy);
+			Integer pinX = 15;
+			Integer pinY = 80;
+			redrawVerticalPin (pinX, pinY, ramState.iod.b7);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b6);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b5);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b4);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b3);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b2);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b1);
+			redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, ramState.iod.b0);
+		}
 
 		String[] memoryArray = this.ram.getMemoryArray();
 
-		Integer topLeftX = 30;
-		Integer topLeftY = 140;
+		Integer topLeftX;
+		if (expand) topLeftX = 188;
+		else topLeftX = 10;
+		Integer topLeftY = 10;
 		Integer rowSize = 16;
 		Integer row = 0;
 		Integer col = 0;

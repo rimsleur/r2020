@@ -61,4 +61,16 @@ public class CPUStateExternalUI0IOD implements SetValue, GetValue
 
 		return result;
 	}
+
+	public void setToState (BitState bitState)
+	{
+		this.b7 = bitState;
+		this.b6 = bitState;
+		this.b5 = bitState;
+		this.b4 = bitState;
+		this.b3 = bitState;
+		this.b2 = bitState;
+		this.b1 = bitState;
+		this.b0 = bitState;
+	}
 }

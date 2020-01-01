@@ -20,18 +20,18 @@ public class LEDI
         for (int i = 1; i <= times; i++)
         {
             String ubDaValue = null;
-            UB0State ub0State = null;
             UB1State ub1State = null;
+            UB2State ub2State = null;
             
-            if (this.currentUbIndex == 0)
-            {
-                ub0State = UB0State.getInstance();
-                ubDaValue = ub0State.getDa ();
-            }
-            else if (this.currentUbIndex == 1)
+            if (this.currentUbIndex == 1)
             {
                 ub1State = UB1State.getInstance();
                 ubDaValue = ub1State.getDa ();
+            }
+            else if (this.currentUbIndex == 2)
+            {
+                ub2State = UB2State.getInstance();
+                ubDaValue = ub2State.getDa ();
             }
 
             if (this.deviceAddress.equals (ubDaValue)) this.lediState.ds = BitState.H;
@@ -116,6 +116,87 @@ public class LEDI
                     ub1State.setRdy (BitState.H);
                 }
             }
+            else if (this.currentUbIndex == 2)
+            {
+                if (this.lediState.ds == BitState.H)
+                {
+                    if (ub2State.getEreq () == BitState.H)
+                    {
+                        if (ub2State.getDir () == BitState.L)
+                        {
+                            this.lediState.rdy = ub2State.getRdy ();
+                            if (this.lediState.rdy == BitState.L)
+                            {
+                                if (this.lediState.stb == BitState.Z)
+                                {
+                                    //String iodValue = Common.hexToBin (memoryArray[this.currentCell++]);
+                                    //this.ramState.iod.setValue (iodValue);
+                                    //ub0State.setIod (iodValue);
+                                    //if (this.currentCell == 256) this.currentCell = 0;
+                                    this.lediState.stb = BitState.L;
+                                    ub2State.setStb (BitState.L);
+                                }
+                            }
+                            else
+                            {
+                                this.lediState.stb = BitState.Z;
+                                ub2State.setStb (BitState.H);
+                            }
+                        }
+                        else
+                        {
+                            if (this.lediState.rdy == BitState.Z && !rdyFired)
+                            {
+                                this.lediState.rdy = BitState.L;
+                                ub2State.setRdy (BitState.L);
+                                rdyFired = true;
+                            }
+
+                            this.lediState.stb = ub2State.getStb ();
+                            if (this.lediState.stb == BitState.L)
+                            {
+                                String iodValue = ub2State.getIod ();
+                                this.lediState.iod.setValue (iodValue);
+                                this.lediState.digit1 = formDigit1 (iodValue);
+                                this.lediState.digit2 = formDigit2 (iodValue);
+
+                                if (this.lediState.rdy == BitState.L)
+                                {
+                                    this.lediState.rdy = BitState.Z;
+                                    ub2State.setRdy (BitState.H);
+                                }
+                            }
+                            /*
+                            else
+                            {
+                                this.lediState.stb = BitState.Z;
+                                ub1State.setStb (BitState.H);
+                            }
+                            */
+                        }
+                    }
+                    else
+                    {
+                        if (ub2State.getDir () == BitState.L)
+                        {
+                            this.lediState.stb = BitState.Z;
+                            this.lediState.rdy = BitState.Z;
+                            this.lediState.iod.setToState (BitState.Z);
+                            ub2State.setIod ("11111111");
+                            rdyFired = false;
+                        }
+                    }
+                }
+                else
+                {
+                    this.lediState.stb = BitState.Z;
+                    ub2State.setStb (BitState.H);
+                    this.lediState.rdy = BitState.Z;
+                    ub2State.setRdy (BitState.H);
+                }
+            }
+
+
         }
     }
 

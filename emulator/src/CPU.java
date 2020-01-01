@@ -23,7 +23,6 @@ public class CPU
 
     private String[] commandList = new String[]{"SELI1 0x1F", "LDI R1, 0x02", "OUT1 R1"}; //Массив, в котором хранятся все команды
 
-
     public CPU()
     {
         this.cpuState = new CPUState(true);
@@ -74,6 +73,23 @@ public class CPU
         ub1State.setRdy (this.cpuState.external.ui1.rdy);
         ub1State.setIreq (this.cpuState.external.ui1.ireq);
         ub1State.setIod (this.cpuState.external.ui1.iod.getValue ());
+
+        this.cpuState.external.ui2.dir = BitState.L;
+        this.cpuState.external.ui2.ereq = BitState.L;
+        this.cpuState.external.ui2.ctl = BitState.L;
+        this.cpuState.external.ui2.stb = BitState.H;
+        this.cpuState.external.ui2.rdy = BitState.H;
+        this.cpuState.external.ui2.ireq = BitState.H;
+        this.cpuState.external.ui2.iod.setToState (BitState.H);
+
+        UB2State ub2State = UB2State.getInstance ();
+        ub2State.setDir (this.cpuState.external.ui2.dir);
+        ub2State.setEreq (this.cpuState.external.ui2.ereq);
+        ub2State.setCtl (this.cpuState.external.ui2.ctl);
+        ub2State.setStb (this.cpuState.external.ui2.stb);
+        ub2State.setRdy (this.cpuState.external.ui2.rdy);
+        ub2State.setIreq (this.cpuState.external.ui2.ireq);
+        ub2State.setIod (this.cpuState.external.ui2.iod.getValue ());
     }
 
     public void calculate (Integer times)
@@ -84,9 +100,11 @@ public class CPU
 
             UB0State ub0State = UB0State.getInstance ();
             UB1State ub1State = UB1State.getInstance ();
+            UB2State ub2State = UB2State.getInstance ();
 
             this.cpuState.external.ui0.ireq = ub0State.getIreq ();
             this.cpuState.external.ui1.ireq = ub1State.getIreq ();
+            this.cpuState.external.ui2.ireq = ub2State.getIreq ();
 
             if (this.cpuState.external.ui0.dir == BitState.L)
             {
@@ -106,6 +124,16 @@ public class CPU
             else
             {
                 this.cpuState.external.ui1.rdy = ub1State.getRdy ();
+            }
+
+            if (this.cpuState.external.ui2.dir == BitState.L)
+            {
+                this.cpuState.external.ui2.stb = ub2State.getStb ();
+                this.cpuState.external.ui2.iod.setValue (ub2State.getIod ());
+            }
+            else
+            {
+                this.cpuState.external.ui2.rdy = ub2State.getRdy ();
             }
 
             if (this.cpuState.internal.ctlr1.ui0md == BitState.H)
@@ -277,10 +305,10 @@ public class CPU
             {
                 this.cpuState.internal.ctlr1.cmdrun = BitState.H;
 
-                switch (this.cpuState.internal.cmdr.getValue())
+                switch (Common.binaryToCommand (this.cpuState.internal.cmdr.getValue()))
                 {
                     //реализация комманды NOP
-                    case "00000000":
+                    case "NOP":
                         if (this.step == CommandStep.STEP1)
                         {
                             if (this.cpuState.external.clk == BitState.H)
@@ -297,7 +325,7 @@ public class CPU
                         break;
 
                     //реализация комманды LDI
-                    case "00000001":
+                    case "LDI":
                         if (this.step == CommandStep.STEP1)
                         {
                             if (this.cpuState.external.clk == BitState.H)
@@ -319,7 +347,7 @@ public class CPU
                             this.cpuState.internal.ctlr1.cmdrun = BitState.L;
                         }
                         break;
-
+/*
                     //реализация комманды OUT0
                     case "OUT0":
                         if (this.step == CommandStep.STEP1)
@@ -345,9 +373,9 @@ public class CPU
                             }
                         }
                         break;
-
+*/
                     //реализация комманды OUT1
-                    case "00000111":
+                    case "OUT1":
                         if (this.step == CommandStep.STEP1)
                         {
                             if (this.cpuState.external.ui1.rdy == BitState.H)
@@ -387,6 +415,46 @@ public class CPU
                         }
                         break;
 
+                    case "OUT2":
+                        if (this.step == CommandStep.STEP1)
+                        {
+                            if (this.cpuState.external.ui2.rdy == BitState.H)
+                            {
+                                this.cpuState.external.ui2.dir = BitState.H;
+                                this.cpuState.external.ui2.ereq = BitState.H;
+                                this.step = CommandStep.STEP2;
+                            }
+                        }
+                        else if (this.step == CommandStep.STEP2)
+                        {
+                            if (this.cpuState.external.ui2.rdy == BitState.L)
+                            {
+                                this.step = CommandStep.STEP3;
+                                String binaryArg0 = this.cpuState.internal.arg0r.getValue();
+                                String register = Common.binaryToHexName(binaryArg0);
+                                this.cpuState.external.ui2.iod.setValue (Common.getRegisterValue (this.cpuState, register));
+                                this.cpuState.external.ui2.stb = BitState.L;
+                            }
+                        }
+                        else if (this.step == CommandStep.STEP3)
+                        {
+                            if (this.cpuState.external.ui2.rdy == BitState.H)
+                            {
+                                this.step = CommandStep.STEP4;
+                                this.cpuState.external.ui2.iod.setValue ("11111111");
+                                this.cpuState.external.ui2.stb = BitState.H;
+                            }
+                        }
+                        else if (this.step == CommandStep.STEP4)
+                        {
+                            this.step = CommandStep.STEP1;
+                            this.cpuState.external.ui2.ereq = BitState.L;
+                            this.cpuState.external.ui2.dir = BitState.L;
+                            this.cpuState.internal.ctlr1.cmdrdy = BitState.L;
+                            this.cpuState.internal.ctlr1.cmdrun = BitState.L;
+                        }
+                        break;
+/*
                     //реализация комманды SELI0
                     case "SELI0":
                         if (this.cpuState.external.clk == BitState.H)
@@ -399,9 +467,9 @@ public class CPU
                             this.cpuState.internal.ctlr1.cmdrun = BitState.L;
                         }
                         break;
-
+*/
                     //реализация комманды SELI1
-                    case "00000110":
+                    case "SELI1":
                         if (this.step == CommandStep.STEP1)
                         {
                             if (this.cpuState.external.clk == BitState.H)
@@ -418,6 +486,23 @@ public class CPU
                         }
                         break;
 
+                    case "SELI2":
+                        if (this.step == CommandStep.STEP1)
+                        {
+                            if (this.cpuState.external.clk == BitState.H)
+                            {
+                                this.cpuState.external.ui2.da.setValue (this.cpuState.internal.arg0r.getValue());
+                                this.step = CommandStep.STEP2;
+                            }
+                        }
+                        else if (this.step == CommandStep.STEP2)
+                        {
+                            this.cpuState.internal.ctlr1.cmdrdy = BitState.L;
+                            this.cpuState.internal.ctlr1.cmdrun = BitState.L;
+                            this.step = CommandStep.STEP1;
+                        }
+                        break;
+/*
                     //реализация комманды SEL
                     case "SEL":
                         if (this.cpuState.external.clk == BitState.H)
@@ -431,7 +516,8 @@ public class CPU
                             this.cpuState.internal.ctlr1.cmdrun = BitState.L;
                         }
                         break;
-
+*/
+/*
                     //реализация комманды MOV
                     case "MOV":
                         if (this.cpuState.external.clk == BitState.H)
@@ -444,6 +530,7 @@ public class CPU
                             this.cpuState.internal.ctlr1.cmdrun = BitState.L;
                         }
                         break;
+*/
                 }
             }
 
@@ -507,6 +594,37 @@ public class CPU
                 String ui1IodValue = this.cpuState.external.ui1.iod.getValue ();
                 String ub1IodValue = ub1State.getIod ();
                 if (!ub1IodValue.equals (ui1IodValue)) ub1State.setIod (ui1IodValue);
+            }
+
+            // синхронизация UI2 и UB2
+            // коопирование значений DA в шину
+            String ui2DaValue = this.cpuState.external.ui2.da.getValue ();
+            String ub2DaValue = ub2State.getDa ();
+            if (!ub2DaValue.equals (ui2DaValue)) ub2State.setDa (ui2DaValue);
+
+            // копирование DIR в шину
+            if (this.cpuState.external.ui2.dir != ub2State.getDir ())
+                ub2State.setDir (this.cpuState.external.ui2.dir);
+
+            if (this.cpuState.external.ui2.dir == BitState.L)
+            {
+                // копирование значений выходных выводов в шину
+                if (this.cpuState.external.ui2.ereq != ub2State.getEreq ())
+                ub2State.setEreq (this.cpuState.external.ui2.ereq);
+                if (this.cpuState.external.ui2.rdy != ub2State.getRdy ())
+                ub2State.setRdy (this.cpuState.external.ui2.rdy);
+            }
+            else if (this.cpuState.external.ui2.dir == BitState.H)
+            {
+                // копирование значений выходных выводов в шину
+                if (this.cpuState.external.ui2.ereq != ub2State.getEreq ())
+                ub2State.setEreq (this.cpuState.external.ui2.ereq);
+                if (this.cpuState.external.ui2.stb != ub2State.getStb ())
+                ub2State.setStb (this.cpuState.external.ui2.stb);
+                // коопирование значений IOD в шину
+                String ui2IodValue = this.cpuState.external.ui2.iod.getValue ();
+                String ub2IodValue = ub2State.getIod ();
+                if (!ub2IodValue.equals (ui2IodValue)) ub2State.setIod (ui2IodValue);
             }
 
             this.cpuStatePrev = this.cpuState.copy();

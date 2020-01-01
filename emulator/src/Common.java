@@ -8,10 +8,10 @@ public class Common
     }
 
     //название команд
-    static String[] commandsName = new String[]{"NOP", "LDI", "SELI0", "SEL", "MOV", "OUT0", "SELI1", "OUT1"};
+    static String[] commandsName = new String[]{"NOP", "LDI", "SELI1", "SELI2", "OUT1", "OUT2"};
 
     //16-й код команд
-    static String[] commandsHex = new String[]{"0x00", "0x01", "0x02", "0x03", "0x04", "0x05", "0x06", "0x07"};
+    static String[] commandsHex = new String[]{"0x00", "0x01", "0x02", "0x03", "0x04", "0x05"};
 
     private static CommandCycle[] commandCycles = new CommandCycle[]
     {
@@ -271,6 +271,14 @@ public class Common
         return null;
     }
 
+    public static String binaryToCommand(String binary)
+    {
+        for (int j = 0; j < commandsHex.length; j++)
+            if (binary.equals (hexToBin (commandsHex[j]))) return commandsName[j];
+
+        return null;
+    }
+
     //возвращает 2-й код регистра
     public static String getRegisterToBinary(String register) {
 
@@ -344,7 +352,7 @@ public class Common
 
         return null;
     }
-    
+
     //возвращает 16-й код в 2-м
     public static String hexToBin(String hex)
     {

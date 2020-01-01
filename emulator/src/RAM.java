@@ -10,7 +10,8 @@ public class RAM
     {
         this.ramState = new RAMState (true);
 
-        String[] codes = new String[] {"06", "01", "01", "01", "FF", "07", "01"};
+        String[] codes = new String[] {"02", "01", "01", "01", "FF", "04", "01"};
+        //String[] codes = new String[] {"03", "01", "01", "01", "FF", "05", "01"};
 
         for (int i = 0; i < memoryArray.length; i++)
         {

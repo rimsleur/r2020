@@ -101,7 +101,7 @@ public class RAMCanvas extends ICanvas implements Runnable, KeyListener
 		{
 			calculate ();
 			redraw ();
-			sleep (50);
+			//sleep (50);
 		}
 	}
 

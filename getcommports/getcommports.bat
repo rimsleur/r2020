@@ -1,0 +1,1 @@
+java.exe -cp build/classes;jar/RXTXcomm.jar GetCommPorts %*

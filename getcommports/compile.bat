@@ -1,0 +1,1 @@
+javac.exe -d build/classes -sourcepath src src/GetCommPorts.java

@@ -497,28 +497,6 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		//перерисовываю UI0MD
 		redrawHorizontalPin (30, 80, 80, cpuState.internal.ctlr1.ui0md);
 
-		pinX = 540;
-		pinY = 55;
-		redrawVerticalPin (pinX, pinY, cpuState.external.ui0.da.b7);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b6);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b5);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b4);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b3);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b2);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b1);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b0);
-
-		pinX = 540;
-		pinY = 115;
-		redrawVerticalPin (pinX, pinY, cpuState.external.ui0.iod.b7);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b6);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b5);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b4);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b3);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b2);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b1);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b0);
-
 		redrawHorizontalPin (530, 685, 64, cpuState.external.clk);
 
 		//перерисовываю CMDR
@@ -593,6 +571,30 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.internal.r2.b1);
 		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.internal.r2.b0);
 
+		//перерисовываю DA (UI0)
+		pinX = 540;
+		pinY = 55;
+		redrawVerticalPin (pinX, pinY, cpuState.external.ui0.da.b7);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b6);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b5);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b4);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b3);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b2);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b1);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.da.b0);
+
+		//перерисовываю IOD (UI0)
+		pinX = 540;
+		pinY = 115;
+		redrawVerticalPin (pinX, pinY, cpuState.external.ui0.iod.b7);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b6);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b5);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b4);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b3);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b2);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b1);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui0.iod.b0);
+
 		redrawHorizontalPin (540, 165, 64, cpuState.external.ui0.dir);
 		redrawHorizontalPin (540, 185, 64, cpuState.external.ui0.ereq);
 		redrawHorizontalPin (540, 205, 64, cpuState.external.ui0.ctl);
@@ -634,33 +636,33 @@ public class CPUCanvas extends ICanvas implements Runnable, KeyListener
 		//перерисовываю DA (UI2)
 		pinX = 540;
 		pinY = 498;
-		redrawVerticalPin (pinX, pinY, cpuState.external.ui1.da.b7);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.da.b6);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.da.b5);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.da.b4);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.da.b3);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.da.b2);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.da.b1);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.da.b0);
+		redrawVerticalPin (pinX, pinY, cpuState.external.ui2.da.b7);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.da.b6);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.da.b5);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.da.b4);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.da.b3);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.da.b2);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.da.b1);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.da.b0);
 
-		//перерисовываю IOD (UI1)
+		//перерисовываю IOD (UI2)
 		pinX = 540;
 		pinY = 558;
-		redrawVerticalPin (pinX, pinY, cpuState.external.ui1.iod.b7);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.iod.b6);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.iod.b5);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.iod.b4);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.iod.b3);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.iod.b2);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.iod.b1);
-		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui1.iod.b0);
+		redrawVerticalPin (pinX, pinY, cpuState.external.ui2.iod.b7);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.iod.b6);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.iod.b5);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.iod.b4);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.iod.b3);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.iod.b2);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.iod.b1);
+		redrawVerticalPin (pinX = pinX + PINSTEPSIZE, pinY, cpuState.external.ui2.iod.b0);
 
-		redrawHorizontalPin (540, 605, 64, cpuState.external.ui1.dir);
-		redrawHorizontalPin (540, 625, 64, cpuState.external.ui1.ereq);
-		redrawHorizontalPin (540, 645, 64, cpuState.external.ui1.ctl);
-		redrawHorizontalPin (635, 605, 64, cpuState.external.ui1.stb);
-		redrawHorizontalPin (635, 625, 64, cpuState.external.ui1.rdy);
-		redrawHorizontalPin (635, 645, 64, cpuState.external.ui1.ireq);
+		redrawHorizontalPin (540, 605, 64, cpuState.external.ui2.dir);
+		redrawHorizontalPin (540, 625, 64, cpuState.external.ui2.ereq);
+		redrawHorizontalPin (540, 645, 64, cpuState.external.ui2.ctl);
+		redrawHorizontalPin (635, 605, 64, cpuState.external.ui2.stb);
+		redrawHorizontalPin (635, 625, 64, cpuState.external.ui2.rdy);
+		redrawHorizontalPin (635, 645, 64, cpuState.external.ui2.ireq);
 
 		UB0State ub0State = UB0State.getInstance();
 

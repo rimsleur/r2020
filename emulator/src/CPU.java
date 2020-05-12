@@ -73,7 +73,7 @@ public class CPU
         ub1State.setRdy (this.cpuState.external.ui1.rdy);
         ub1State.setIreq (this.cpuState.external.ui1.ireq);
         ub1State.setIod (this.cpuState.external.ui1.iod.getValue ());
-
+/*
         this.cpuState.external.ui2.dir = BitState.L;
         this.cpuState.external.ui2.ereq = BitState.L;
         this.cpuState.external.ui2.ctl = BitState.L;
@@ -82,7 +82,7 @@ public class CPU
         this.cpuState.external.ui2.ireq = BitState.H;
         this.cpuState.external.ui2.iod.setToState (BitState.H);
 
-        UB2State ub2State = UB2State.getInstance ();
+        
         ub2State.setDir (this.cpuState.external.ui2.dir);
         ub2State.setEreq (this.cpuState.external.ui2.ereq);
         ub2State.setCtl (this.cpuState.external.ui2.ctl);
@@ -90,6 +90,16 @@ public class CPU
         ub2State.setRdy (this.cpuState.external.ui2.rdy);
         ub2State.setIreq (this.cpuState.external.ui2.ireq);
         ub2State.setIod (this.cpuState.external.ui2.iod.getValue ());
+*/
+        this.cpuState.external.ui2.dir = BitState.L;
+        this.cpuState.external.ui2.ereq = BitState.L;
+        this.cpuState.external.ui2.ctl = BitState.L;
+
+        UB2State ub2State = UB2State.getInstance ();
+        this.cpuState.external.ui2.stb = ub2State.getStb ();
+        this.cpuState.external.ui2.rdy = ub2State.getRdy ();
+        this.cpuState.external.ui2.ireq = ub2State.getIreq ();
+        this.cpuState.external.ui2.iod.setValue (ub2State.getIod ());
     }
 
     public void calculate (Integer times)
@@ -392,7 +402,7 @@ public class CPU
                                 this.step = CommandStep.STEP3;
                                 String binaryArg0 = this.cpuState.internal.arg0r.getValue();
                                 String register = Common.binaryToHexName(binaryArg0);
-                                this.cpuState.external.ui1.iod.setValue (Common.getRegisterValue (this.cpuState, register));
+                                this.cpuState.external.ui1.iod.setValue (Common.getRegisterValue (this.cpuState.internal, register));
                                 this.cpuState.external.ui1.stb = BitState.L;
                             }
                         }
@@ -432,7 +442,7 @@ public class CPU
                                 this.step = CommandStep.STEP3;
                                 String binaryArg0 = this.cpuState.internal.arg0r.getValue();
                                 String register = Common.binaryToHexName(binaryArg0);
-                                this.cpuState.external.ui2.iod.setValue (Common.getRegisterValue (this.cpuState, register));
+                                this.cpuState.external.ui2.iod.setValue (Common.getRegisterValue (this.cpuState.internal, register));
                                 this.cpuState.external.ui2.stb = BitState.L;
                             }
                         }
@@ -441,7 +451,6 @@ public class CPU
                             if (this.cpuState.external.ui2.rdy == BitState.H)
                             {
                                 this.step = CommandStep.STEP4;
-                                this.cpuState.external.ui2.iod.setValue ("11111111");
                                 this.cpuState.external.ui2.stb = BitState.H;
                             }
                         }
@@ -531,6 +540,38 @@ public class CPU
                         }
                         break;
 */
+                    case "IN2":
+                        if (this.step == CommandStep.STEP1)
+                        {
+                            if (this.cpuState.external.ui2.stb == BitState.H)
+                            {
+                                this.cpuState.external.ui2.ereq = BitState.H;
+                                this.cpuState.external.ui2.rdy = BitState.L;
+                                this.step = CommandStep.STEP2;
+                            }
+                        }
+                        else if (this.step == CommandStep.STEP2)
+                        {
+                            if (this.cpuState.external.ui2.stb == BitState.L)
+                            {
+                                this.step = CommandStep.STEP3;
+                                String binaryArg0 = this.cpuState.internal.arg0r.getValue();
+                                String register = Common.binaryToHexName(binaryArg0);
+                                Common.setRegisterValue (this.cpuState.internal, register, this.cpuState.external.ui2.iod.getValue ());
+                                this.cpuState.external.ui2.rdy = BitState.H;
+                            }
+                        }
+                        else if (this.step == CommandStep.STEP3)
+                        {
+                            if (this.cpuState.external.ui2.stb == BitState.H)
+                            {
+                                this.step = CommandStep.STEP1;
+                                this.cpuState.external.ui2.ereq = BitState.L;
+                                this.cpuState.internal.ctlr1.cmdrdy = BitState.L;
+                                this.cpuState.internal.ctlr1.cmdrun = BitState.L;
+                            }
+                        }
+                        break;
                 }
             }
 
@@ -557,12 +598,13 @@ public class CPU
                 // копирование значений выходных выводов в шину
                 if (this.cpuState.external.ui0.ereq != ub0State.getEreq ())
                 ub0State.setEreq (this.cpuState.external.ui0.ereq);
-                if (this.cpuState.external.ui0.stb != ub0State.getStb ())
-                ub0State.setStb (this.cpuState.external.ui0.stb);
-                // коопирование значений IOD в шину
+
                 String ui0IodValue = this.cpuState.external.ui0.iod.getValue ();
                 String ub0IodValue = ub0State.getIod ();
                 if (!ub0IodValue.equals (ui0IodValue)) ub0State.setIod (ui0IodValue);
+
+                if (this.cpuState.external.ui0.stb != ub0State.getStb ())
+                ub0State.setStb (this.cpuState.external.ui0.stb);
             }
 
             // синхронизация UI1 и UB1
@@ -588,12 +630,13 @@ public class CPU
                 // копирование значений выходных выводов в шину
                 if (this.cpuState.external.ui1.ereq != ub1State.getEreq ())
                 ub1State.setEreq (this.cpuState.external.ui1.ereq);
-                if (this.cpuState.external.ui1.stb != ub1State.getStb ())
-                ub1State.setStb (this.cpuState.external.ui1.stb);
-                // коопирование значений IOD в шину
+
                 String ui1IodValue = this.cpuState.external.ui1.iod.getValue ();
                 String ub1IodValue = ub1State.getIod ();
                 if (!ub1IodValue.equals (ui1IodValue)) ub1State.setIod (ui1IodValue);
+
+                if (this.cpuState.external.ui1.stb != ub1State.getStb ())
+                ub1State.setStb (this.cpuState.external.ui1.stb);
             }
 
             // синхронизация UI2 и UB2
@@ -604,7 +647,8 @@ public class CPU
 
             // копирование DIR в шину
             if (this.cpuState.external.ui2.dir != ub2State.getDir ())
-                ub2State.setDir (this.cpuState.external.ui2.dir);
+                if (this.cpuState.external.ui2.dir == BitState.H)
+                    ub2State.setDir (this.cpuState.external.ui2.dir);
 
             if (this.cpuState.external.ui2.dir == BitState.L)
             {
@@ -619,13 +663,19 @@ public class CPU
                 // копирование значений выходных выводов в шину
                 if (this.cpuState.external.ui2.ereq != ub2State.getEreq ())
                 ub2State.setEreq (this.cpuState.external.ui2.ereq);
-                if (this.cpuState.external.ui2.stb != ub2State.getStb ())
-                ub2State.setStb (this.cpuState.external.ui2.stb);
-                // коопирование значений IOD в шину
+
                 String ui2IodValue = this.cpuState.external.ui2.iod.getValue ();
                 String ub2IodValue = ub2State.getIod ();
                 if (!ub2IodValue.equals (ui2IodValue)) ub2State.setIod (ui2IodValue);
+
+                if (this.cpuState.external.ui2.stb != ub2State.getStb ())
+                ub2State.setStb (this.cpuState.external.ui2.stb);
             }
+
+            // копирование DIR в шину
+            if (this.cpuState.external.ui2.dir != ub2State.getDir ())
+                if (this.cpuState.external.ui2.dir == BitState.L)
+                    ub2State.setDir (this.cpuState.external.ui2.dir);
 
             this.cpuStatePrev = this.cpuState.copy();
         }

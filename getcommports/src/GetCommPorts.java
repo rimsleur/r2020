@@ -11,14 +11,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
+import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class GetCommPorts
 {
-    static Enumeration<CommPortIdentifier>            portList;
+    static Enumeration<CommPortIdentifier>  portList;
     static CommPortIdentifier portId;
-    static SerialPort                 serialPort;
-    static OutputStream          outputStream;
-    static boolean                    outputBufferEmptyFlag = false;    
+    static SerialPort serialPort;
+    static OutputStream outputStream;
+    static boolean outputBufferEmptyFlag = false;    
 
 
     public static class SerialReader implements SerialPortEventListener
@@ -42,19 +44,15 @@ public class GetCommPorts
             try
             {
                 int len = 0;
-                while ( (data = in.read()) > -1)
+                while ((data = in.read()) > -1)
                 {
-                    if (data == '\n')
-                    {
-                        break;
-                    }
                     buffer[len++] = (byte) data;
+                    System.out.println (data);
                 }
-                System.out.println(new String(buffer, 0, len));
+                //System.out.println (new String (buffer, 0, len));
             }
             catch (IOException e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
                 System.exit(-1);
             }
@@ -73,27 +71,31 @@ public class GetCommPorts
         @Override
         public void run()
         {           
+            int i;
+            byte b;
+
             try
             {
-                byte c = 0;
-                while ( (c = (byte) System.in.read()) > -1)
+                while (true)
                 {
-                    if (c != 13 && c != 10)
+                    Scanner scanner = new Scanner (System.in);
+                    i = scanner.nextInt ();
+                    if (i < 0 || i > 255)
                     {
-                        this.out.write(c);
-                        System.out.println("this.out.write(" + c + ")");
+                        System.out.println ("Input number from 0 to 255");
+                        continue;
                     }
+                    b = (byte) i;
+                    this.out.write (b);
+                    System.out.println ("this.out.write(" + b + ")");
                 }
             }
-            catch (IOException e)
+            catch (IOException | InputMismatchException e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
                 System.exit(-1);
             }
-
         }
-
     }
 
     private static String getPortTypeName ( int portType )
@@ -120,7 +122,7 @@ public class GetCommPorts
         @SuppressWarnings("unchecked")
         java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
 
-        while ( portEnum.hasMoreElements() ) 
+        while (portEnum.hasMoreElements()) 
         {
             CommPortIdentifier portIdentifier = portEnum.nextElement();
             System.out.println(portIdentifier.getName()  +  " - " +  getPortTypeName(portIdentifier.getPortType()) );           
@@ -231,7 +233,7 @@ public class GetCommPorts
         {
         case 1:
             //doReadWrite("/dev/ttyUSB0");
-            doReadWrite("COM4");
+            doReadWrite("COM3");
             break;
         case 2:
             listPorts();

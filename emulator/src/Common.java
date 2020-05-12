@@ -8,10 +8,10 @@ public class Common
     }
 
     //название команд
-    static String[] commandsName = new String[]{"NOP", "LDI", "SELI1", "SELI2", "OUT1", "OUT2"};
+    static String[] commandsName = new String[]{"NOP", "LDI", "SELI1", "SELI2", "OUT1", "OUT2", "IN2"};
 
     //16-й код команд
-    static String[] commandsHex = new String[]{"0x00", "0x01", "0x02", "0x03", "0x04", "0x05"};
+    static String[] commandsHex = new String[]{"0x00", "0x01", "0x02", "0x03", "0x04", "0x05", "0x06"};
 
     private static CommandCycle[] commandCycles = new CommandCycle[]
     {
@@ -129,7 +129,7 @@ public class Common
     }
 
     //устанавливает значение для заданого регистра
-    public static void setRegisterValue(CPUStateInternal internal, String nameRegister, String binaryCode)
+    public static void setRegisterValue (CPUStateInternal internal, String nameRegister, String binaryCode)
     {
         switch (nameRegister)
         {
@@ -209,18 +209,19 @@ public class Common
     }
 
     //возвращает значения регистров в 2-м коде
-    public static String getRegisterValue(CPUState state, String nameRegister) {
+    public static String getRegisterValue (CPUStateInternal internal, String nameRegister) {
         String result = null;
 
-        switch (nameRegister) {
+        switch (nameRegister)
+        {
             case "R0":
-                result = state.internal.r0.getValue();
+                result = internal.r0.getValue();
                 break;
             case "R1":
-                result = state.internal.r1.getValue();
+                result = internal.r1.getValue();
                 break;
             case "R2":
-                result = state.internal.r2.getValue();
+                result = internal.r2.getValue();
                 break;
         }
         return result;
